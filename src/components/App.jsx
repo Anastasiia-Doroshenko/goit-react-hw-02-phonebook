@@ -16,22 +16,16 @@ export class App extends Component {
   };
 
   createContact = data => {
-    this.setState(() => {
-      if (
-        this.state.contacts.find(
-          contact => contact.name.toLowerCase() === data.name.toLowerCase()
-        )
-      ) {
-        alert(`${data.name} is already in contacts`);
-      } else {
-        return {
-          contacts: [
-            { id: nanoid(), name: data.name, number: data.number },
-            ...this.state.contacts,
-          ],
-        };
-      }
-    });
+    const isInContacts = this.state.contacts.find(
+      contact => contact.name.toLowerCase() === data.name.toLowerCase()
+    );
+    if (isInContacts) {
+      alert(`${data.name} is already in contacts`);
+      return;
+    }
+    this.setState(prevState => ({
+      contacts: [{ id: nanoid(), ...data }, ...prevState.contacts],
+    }));
   };
 
   deleteUser = id => {
@@ -40,12 +34,8 @@ export class App extends Component {
     }));
   };
 
-  createFilterData = data => {
-    this.setState(data);
-  };
-
   handleChange = ({ target }) => {
-    this.createFilterData({ filter: target.value });
+    this.setState({ filter: target.value });
   };
 
   render() {
@@ -60,11 +50,14 @@ export class App extends Component {
           <h1>Phonebook</h1>
           <ContactForm createContact={this.createContact} />
           <h2>Contacts</h2>
-          <ContactFilter
-            createFilterData={this.createFilterData}
-            handleChange={this.handleChange}
-          />
-          <Contacts contacts={filterContacts} onDelete={this.deleteUser} />
+          {contacts.length > 0 ? (
+            <>
+              <ContactFilter handleChange={this.handleChange} value={filter} />
+              <Contacts contacts={filterContacts} onDelete={this.deleteUser} />
+            </>
+          ) : (
+            <p>no contacts yet</p>
+          )}
         </div>
       </section>
     );

@@ -1,7 +1,7 @@
 import propTypes from 'prop-types';
 import { StyledFilter } from './ContactFilterStyled';
 
-export function ContactFilter({ handleChange }) {
+export function ContactFilter({ handleChange, value }) {
   return (
     <>
       <StyledFilter>
@@ -11,6 +11,7 @@ export function ContactFilter({ handleChange }) {
           name="filter"
           pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
           onChange={handleChange}
+          value={value}
         />
       </StyledFilter>
     </>
@@ -19,4 +20,5 @@ export function ContactFilter({ handleChange }) {
 
 ContactFilter.propTypes = {
   handleChange: propTypes.func.isRequired,
+  value: propTypes.string.isRequired,
 };
